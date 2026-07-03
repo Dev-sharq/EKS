@@ -1,0 +1,48 @@
+EKS Commands:: 
+
+
+eksctl inatallation::
+
+1. Download the latest release::
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz"
+
+2. Extract the tarball
+tar -xzf eksctl_$(uname -s)_amd64.tar.gz
+
+3. Move the binary to your PATH
+sudo mv eksctl /usr/local/bin
+
+4. Verify installation
+eksctl version
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+🔹 Cluster Management:: 
+
+Create a cluster
+eksctl create cluster --name my-cluster --region us-east-1 --nodes 2
+•	Get cluster info
+eksctl get cluster --region us-east-1
+•	Upgrade cluster version
+eksctl upgrade cluster --name my-cluster --region us-east-1 --version 1.36
+•	Delete a cluster
+eksctl delete cluster --name my-cluster --region us-east-1
+
+🔹Node Group Management
+
+List node groups::
+eksctl get nodegroup --cluster my-cluster --region us-east-1
+
+Create a node group:
+eksctl create nodegroup --cluster my-cluster --name my-nodegroup --region us-east-1
+
+Upgrade a node group
+eksctl upgrade nodegroup --cluster my-cluster --name my-nodegroup --region us-east-1
+
+Delete a node group
+eksctl delete nodegroup --cluster my-cluster --name my-nodegroup --region us-east-1
+
+-----------------------------------------------------------------------------------------------------
+
+
+
