@@ -1,0 +1,89 @@
+#######3 Create Storage Class #########
+
+allowVolumeExpansion: true
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.kubernetes.io/zone
+    values:
+    - westeurope-1
+    - westeurope-2
+    - eastus-1
+    - eastus-2
+    - eastus-3
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+  labels:
+    kubernetes.io/cluster-service: "true"
+  name: tomcat-pvc2
+parameters:
+  kind: Managed
+  storageaccounttype: Standard_LRS
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+
+
+=============================================================
+
+##########Create PVC #######################
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tomcat-pvc2
+  namespace: dev
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 7Gi
+  storageClassName: tomcat-pvc2
+
+
+
+=============================================
+
+
+############Create POD using PVC ############
+
+
+kind: Deployment
+metadata:
+  name: webapp-pvc-deployment
+  namespace: dev
+  labels:
+    app: tomcat
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat
+    spec:
+      containers:
+      - name: webapp-container
+        image: tomcat:8.0
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "200Mi"
+            cpu: "50m"
+          limits:
+            memory: "700Mi"
+            cpu: "100m"
+        volumeMounts:
+        - mountPath: "pvc-webapp"
+          name: volume
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: storage-pvc
+
+===================================================

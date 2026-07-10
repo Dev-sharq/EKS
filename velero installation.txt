@@ -1,0 +1,49 @@
+Steps to install Velero Client on Ubuntu:
+
+#Install Velero binary:
+
+wget https://github.com/velero-io/velero/releases/download/v1.18.2/velero-v1.18.2-linux-amd64.tar.gz
+
+#####Extract the tarball:
+
+tar -xvf velero-v1.18.1-linux-amd64.tar.gz -C /tmp
+
+#######Move the extracted velero binary to /usr/local/bin
+
+sudo mv velero-v1.18.2-linux-amd64/velero /usr/local/bin
+
+
+==
+1 - Create credential file 
+
+AZURE_CLOUD_NAME=AzurePublicCloud
+AZURE_SUBSCRIPTION_ID=f6fc5634-b1e4-4fd8-8a4e-44b2a43d2247
+AZURE_TENANT_ID=6be67b1d-ef05-4460-b770-04ff0a713be6
+AZURE_CLIENT_ID=28456146-e758-407a-bb4e-b140b581afe7
+AZURE_CLIENT_SECRET=tz38Q~4mEFsJC9quCLNpqvCtrgO_5lB65Q_kkcxx
+AZURE_RESOURCE_GROUP=MC_aks-rg_aks-dev_eastus
+
+velerostorageaccount23
+
+## run this command 
+
+velero install --provider azure --plugins velero/velero-plugin-for-microsoft-azure:v1.1.0 --bucket bucket --backup-location-config resourceGroup=aks-rg,storageAccount=velerostorageaccount23,subscriptionId=f6fc5634-b1e4-4fd8-8a4e-44b2a43d2247 --secret-file ./credentials  --namespace velero --dry-run -o yaml > velero_new.yaml
+
+###### How to take backup
+
+velero backup create fullbackup --include-namespaces dev --ttl 2160h0m0s
+
+###### How to restore backup 
+
+velero restore create --from-backup tomcatbackup
+
+
+
+
+#### Common command
+
+velero get backup
+velero describe backup backup_name
+velero delete schedule --all
+velero get backup
+velero delete backup  --all
