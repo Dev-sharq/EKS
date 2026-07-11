@@ -44,5 +44,14 @@ eksctl delete nodegroup --cluster my-cluster --name my-nodegroup --region us-eas
 
 -----------------------------------------------------------------------------------------------------
 
+eksctl create cluster \
+  --name free-tier-cluster \
+  --region us-east-1 \
+  --node-type t3.micro \
+  --nodes 2 \
+  --node-volume-size 20 \
+  --node-private-networking=false \
+  --managed
+
 
 
