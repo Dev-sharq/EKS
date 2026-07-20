@@ -1,0 +1,1 @@
+ eksctl create cluster --name eks-cluster --region us-east-1 --nodes 3 --node-type c7i-flex.large --nodegroup-name ng-monitoring --managed
